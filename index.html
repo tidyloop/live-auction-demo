@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Auction Platform: clickable prototype</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#0f1b2d;--bg:#f4f6fa;--card:#fff;--line:#e3e8f0;--muted:#56657b;--accent:#e8492a;--teal:#0f766e;--live:#e11d48;--r:16px}
+*{box-sizing:border-box}
+body{margin:0;font:400 15px/1.55 Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',Inter,sans-serif;margin:0;letter-spacing:-.01em}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.top{background:var(--ink);color:#fff;position:sticky;top:0;z-index:20}
+.top .in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:0 20px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font:800 1.08rem 'Plus Jakarta Sans'}
+.logo i{width:34px;height:34px;border-radius:10px;background:var(--accent);display:grid;place-items:center;font-style:normal;font-size:18px}
+.tag{font:600 11px/1 Inter;background:rgba(255,255,255,.13);color:#dbe3ef;padding:6px 9px;border-radius:999px;letter-spacing:.04em}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tabs button{background:none;border:0;color:#b9c5d9;padding:8px 13px;border-radius:999px;font-weight:600;white-space:nowrap}
+.tabs button.on,.tabs button:hover{background:rgba(255,255,255,.11);color:#fff}
+.me{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-weight:700;white-space:nowrap}
+.me.in{background:rgba(255,255,255,.13)}
+.wrap{max-width:1240px;margin:0 auto;padding:22px 20px 40px}
+.event{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(120deg,#13233d,#22446e);color:#fff;border-radius:var(--r);padding:16px 22px;margin-bottom:20px}
+.live{display:inline-flex;align-items:center;gap:7px;background:var(--live);font:700 12px/1 Inter;padding:7px 11px;border-radius:999px;letter-spacing:.07em}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;animation:p 1.2s infinite}
+@keyframes p{50%{opacity:.25}}
+.event h2{font-size:1.15rem}
+.event small{color:#bccadf}
+.event .stats{margin-left:auto;display:flex;gap:26px}
+.event .stats b{display:block;font:700 1.15rem 'Plus Jakarta Sans'}
+.event .stats span{font-size:.8rem;color:#bccadf}
+.grid{display:grid;grid-template-columns:1.65fr 1fr;gap:20px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.lot{display:grid;grid-template-columns:250px 1fr;gap:24px}
+.pic{border-radius:14px;aspect-ratio:1;display:grid;place-items:center;font-size:104px;position:relative;overflow:hidden}
+.pic .no{position:absolute;top:10px;left:10px;background:#fff;border-radius:999px;padding:4px 10px;font:700 12px Inter}
+.sold{position:absolute;inset:0;display:none;place-items:center;background:rgba(15,27,45,.62)}
+.sold.on{display:grid}
+.sold span{transform:rotate(-10deg);border:4px solid #fff;color:#fff;font:800 1.7rem/1.1 'Plus Jakarta Sans';padding:10px 16px;border-radius:10px;text-align:center}
+.sold small{display:block;font:600 .82rem Inter;margin-top:4px}
+.lot h1{font-size:1.55rem;margin:4px 0 6px}
+.muted{color:var(--muted)}
+.eyebrow{font:700 .75rem Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.price{display:flex;align-items:center;gap:18px;margin:18px 0 14px}
+.price b{font:800 2.5rem/1 'Plus Jakarta Sans';display:block}
+.leadby{font-size:.88rem;color:var(--muted);margin-top:6px}
+.leadby.you{color:var(--teal);font-weight:700}
+.ring{--p:100;margin-left:auto;width:78px;height:78px;border-radius:50%;background:conic-gradient(var(--c,var(--accent)) calc(var(--p)*1%),#eef1f6 0);display:grid;place-items:center;flex:none}
+.ring span{width:63px;height:63px;border-radius:50%;background:#fff;display:grid;place-items:center;font:800 1.15rem 'Plus Jakarta Sans'}
+.ring.hot{--c:var(--live)}
+.quick{display:flex;gap:8px;flex-wrap:wrap}
+.quick button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;font-weight:600}
+.quick button:hover{border-color:var(--ink)}
+.bidrow{display:flex;gap:8px;margin-top:10px}
+.bidrow input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font:600 1rem Inter}
+.go{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:12px 22px;font-weight:700}
+.go:hover{filter:brightness(.95)}
+.note{font-size:.8rem;color:var(--muted);margin-top:10px}
+h3{font-size:1rem;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.feed{list-style:none;margin:0;padding:0;height:330px;overflow:auto}
+.feed li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.feed li.you b{color:var(--teal)}
+.feed li.sys{color:var(--muted);font-size:.85rem}
+.feed time{color:var(--muted);font-size:.8rem;margin-left:auto;padding-left:8px}
+.up{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.mini .pic{font-size:52px;border-radius:12px;aspect-ratio:4/3}
+.mini h4{margin:10px 0 2px;font-size:.96rem}
+.mini .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:.9rem}
+.watch{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:.82rem;font-weight:600}
+.watch.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.section{margin-top:26px}
+.toasts{position:fixed;right:18px;top:78px;display:grid;gap:10px;z-index:50}
+.toast{background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;box-shadow:0 12px 30px -10px rgba(0,0,0,.45);font-weight:600;max-width:320px;animation:in .25s}
+.toast.warn{background:var(--live)}
+.toast.ok{background:var(--teal)}
+@keyframes in{from{transform:translateY(-8px);opacity:0}}
+.modal{position:fixed;inset:0;background:rgba(15,27,45,.55);display:none;place-items:center;z-index:60;padding:16px}
+.modal.open{display:grid}
+.modal form{background:#fff;border-radius:18px;padding:26px;width:min(430px,100%);display:grid;gap:12px}
+.modal label{display:grid;gap:5px;font-weight:600;font-size:.88rem}
+.modal input{border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit}
+.modal .chk{display:flex;gap:8px;align-items:center;font-weight:500}
+.ghost{background:none;border:0;color:var(--muted);font-weight:600}
+.view{display:none}
+.view.on{display:block}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi span{color:var(--muted);font-size:.85rem}
+.kpi b{display:block;font:800 1.6rem 'Plus Jakarta Sans'}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.06em}
+.pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:.78rem;font-weight:700}
+.pill.paid{background:#dcfce7;color:#166534}.pill.due{background:#fef3c7;color:#92400e}.pill.livep{background:#ffe4e6;color:#9f1239}
+.pill.q{background:#e0e7ff;color:#3730a3}.pill.soldp{background:#e2e8f0;color:#334155}.pill.lead{background:#ccfbf1;color:#115e59}.pill.out{background:#fee2e2;color:#991b1b}
+.admin{display:grid;grid-template-columns:1fr 1.5fr;gap:20px;align-items:start}
+.admin form{display:grid;gap:10px}
+.admin .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.admin label{display:grid;gap:5px;font-weight:600;font-size:.86rem}
+.admin input,.admin select,.admin textarea{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;width:100%}
+.paybtn{background:var(--teal);color:#fff;border:0;border-radius:999px;padding:5px 12px;font-weight:700;font-size:.82rem}
+.foot{margin-top:30px;font-size:.85rem;color:var(--muted);text-align:center;line-height:1.6}
+@media (max-width:900px){
+  .top .in{flex-wrap:wrap;height:auto;padding:10px 16px;gap:10px}
+  .tabs{order:3;width:100%;margin:0;overflow-x:auto}
+  .me{margin-left:auto}
+  .grid,.admin{grid-template-columns:1fr}
+  .lot{grid-template-columns:1fr}
+  .pic{aspect-ratio:16/10;font-size:78px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .event .stats{margin-left:0;gap:20px}
+  .wrap{padding:16px 14px 30px}
+  .card{padding:18px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="logo"><i>🔨</i>Auction Room <span class="tag">PROTOTYPE</span></div>
+  <nav class="tabs" aria-label="Sections">
+    <button class="on" data-v="live">Live auction</button>
+    <button data-v="upcoming">Upcoming lots</button>
+    <button data-v="mine">My bids</button>
+    <button data-v="admin">Admin</button>
+  </nav>
+  <button class="me" id="me">Register / Sign in</button>
+</div></header>
+
+<main class="wrap">
+  <section class="event">
+    <span class="live">LIVE</span>
+    <div><h2>Thursday Night Auction</h2><small>Weekly live session · Thursdays 19:00 to 21:00</small></div>
+    <div class="stats">
+      <div><b id="online">126</b><span>bidders online</span></div>
+      <div><b id="ends">01:12:30</b><span>session ends in</span></div>
+      <div><b id="left">6</b><span>lots tonight</span></div>
+    </div>
+  </section>
+
+  <div class="view on" id="v-live">
+    <div class="grid">
+      <article class="card">
+        <div class="lot">
+          <div class="pic" id="pic"><span class="no" id="no">Lot #101</span><span id="emo"></span>
+            <div class="sold" id="sold"><span id="soldtxt">SOLD</span></div></div>
+          <div>
+            <span class="eyebrow">Now selling</span>
+            <h1 id="title"></h1>
+            <p class="muted" id="desc"></p>
+            <div class="price">
+              <div><span class="muted" style="font-size:.85rem">Current bid</span><b id="price"></b><div class="leadby" id="leadby"></div></div>
+              <div class="ring" id="ring"><span id="secs">45</span></div>
+            </div>
+            <div class="quick" id="quick"></div>
+            <div class="bidrow"><input id="custom" inputmode="numeric" placeholder="Your bid in rand" aria-label="Custom bid"><button class="go" id="place">Place bid</button></div>
+            <p class="note">A bid in the last 15 seconds adds time, so nobody wins by sniping. Bids update for everyone instantly.</p>
+          </div>
+        </div>
+      </article>
+      <aside class="card">
+        <h3>Live bids <span class="pill livep">real time</span></h3>
+        <ul class="feed" id="feed" aria-live="polite"></ul>
+      </aside>
+    </div>
+    <div class="section">
+      <h3>Coming up next</h3>
+      <div class="up" id="next"></div>
+    </div>
+  </div>
+
+  <div class="view" id="v-upcoming">
+    <div class="card"><h3>All lots this week</h3><p class="muted" style="margin-top:0">Tap Watch and we'll email or SMS you when the lot opens.</p><div class="up" id="all"></div></div>
+  </div>
+
+  <div class="view" id="v-mine">
+    <div class="card"><h3>My bids and wins</h3><div id="minebox"></div></div>
+  </div>
+
+  <div class="view" id="v-admin">
+    <div class="kpis">
+      <div class="card kpi"><span>Registered members</span><b id="k-mem">1,284</b></div>
+      <div class="card kpi"><span>Bidders online</span><b id="k-on">126</b></div>
+      <div class="card kpi"><span>Lots sold tonight</span><b id="k-sold">4</b></div>
+      <div class="card kpi"><span>Sales tonight</span><b id="k-rev">R0</b></div>
+    </div>
+    <div class="admin">
+      <div class="card">
+        <h3>Add a listing</h3>
+        <form id="addform">
+          <label>Title<input name="t" required placeholder="e.g. Pine dining table + 6 chairs"></label>
+          <label>Description<textarea name="d" rows="2" placeholder="Condition, size, collection area"></textarea></label>
+          <div class="two"><label>Starting bid (R)<input name="s" type="number" min="10" value="500" required></label>
+          <label>Bid step (R)<input name="i" type="number" min="10" value="50" required></label></div>
+          <div class="two"><label>Lot timer<select name="time"><option>45 seconds</option><option>60 seconds</option><option>90 seconds</option></select></label>
+          <label>Photos<input type="file" accept="image/*" multiple></label></div>
+          <button class="go" type="submit">Add to tonight's auction</button>
+        </form>
+      </div>
+      <div class="card">
+        <h3>Lots</h3>
+        <table><thead><tr><th>Lot</th><th>Item</th><th>Start</th><th>Status</th></tr></thead><tbody id="lots"></tbody></table>
+        <h3 style="margin-top:22px">Transactions</h3>
+        <table><thead><tr><th>Lot</th><th>Winner</th><th>Amount</th><th>Payment</th></tr></thead><tbody id="tx"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">Clickable prototype by Tidyloop. Bids, bidders and payments here are simulated inside your browser.<br>
+  In the real platform they run on a live server, so every member sees the same price at the same moment.</p>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <form id="reg">
+    <h2 id="mt">Register to bid</h2>
+    <p class="muted" style="margin:0">Members verify their email and mobile number before their first bid.</p>
+    <label>Full name<input name="n" required autocomplete="name"></label>
+    <label>Email<input name="e" type="email" required autocomplete="email"></label>
+    <label>Mobile<input name="m" type="tel" required autocomplete="tel" placeholder="+27"></label>
+    <label>Password<input name="p" type="password" required minlength="6" autocomplete="new-password"></label>
+    <label class="chk"><input type="checkbox" required> I accept the auction rules</label>
+    <button class="go" type="submit">Create account</button>
+    <button class="ghost" type="button" id="cancel">Not now</button>
+  </form>
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const R = n => "R" + Math.round(n).toLocaleString("en-ZA");
+const LOTS = [
+  {id:101, t:"Solid oak sideboard", d:"1970s, three drawers, light scratches on top. Collect in Margate.", e:"🗄️", s:800, i:50, bg:"#fde7d9"},
+  {id:102, t:"29-inch mountain bike", d:"Hydraulic brakes, new tyres, large frame. Serviced last month.", e:"🚲", s:2500, i:100, bg:"#e0f2fe"},
+  {id:103, t:"Kettle braai, 57 cm", d:"With lid and ash catcher. Used for one summer.", e:"🔥", s:600, i:50, bg:"#fee2e2"},
+  {id:104, t:"Surf rod and reel combo", d:"12-foot rod, spinning reel, line included.", e:"🎣", s:450, i:50, bg:"#dcfce7"},
+  {id:105, t:"Kids' wooden bunk bed", d:"Pine, with ladder and two mattresses.", e:"🛏️", s:1200, i:100, bg:"#ede9fe"},
+  {id:106, t:"7'6\" mini-mal surfboard", d:"Fins included, one small ding professionally repaired.", e:"🏄", s:1800, i:100, bg:"#cffafe"}
+];
+let lots = LOTS.map(l => ({...l, status:"queued"}));
+let idx = 0, L, price, leader, t, T = 45, closing = false, user = null, nextId = 107;
+let online = 126, sessionLeft = 72 * 60 + 30, members = 1284;
+const watch = new Set(), mine = [];
+const tx = [
+  {lot:"#097 Glass-top coffee table", who:"Bidder #31", amt:650, st:"paid"},
+  {lot:"#098 Garden bench", who:"Bidder #12", amt:900, st:"paid"},
+  {lot:"#099 Bar fridge", who:"Bidder #44", amt:1400, st:"due"},
+  {lot:"#100 Toolbox set", who:"Bidder #08", amt:520, st:"paid"}
+];
+const now = () => new Date().toTimeString().slice(0, 8);
+
+function toast(msg, kind = "") {
+  const el = document.createElement("div");
+  el.className = "toast " + kind; el.textContent = msg;
+  $("toasts").prepend(el); setTimeout(() => el.remove(), 4200);
+}
+function feed(html, cls = "") {
+  const li = document.createElement("li"); li.className = cls;
+  li.innerHTML = html + `<time>${now()}</time>`;
+  $("feed").prepend(li);
+  while ($("feed").children.length > 40) $("feed").lastChild.remove();
+}
+function startLot() {
+  L = lots[idx]; L.status = "live"; price = L.s; leader = null; t = T; closing = false;
+  $("pic").style.background = L.bg; $("emo").textContent = L.e; $("no").textContent = "Lot #" + L.id;
+  $("title").textContent = L.t; $("desc").textContent = L.d; $("sold").classList.remove("on");
+  $("quick").innerHTML = [1, 2, 5].map(k => `<button data-k="${k}">+ ${R(L.i * k)}</button>`).join("");
+  feed(`<span>Lot #${L.id} <b>${L.t}</b> is open at ${R(L.s)}</span>`, "sys");
+  if (watch.has(L.id)) toast(`Lot #${L.id} you're watching is live now`, "ok");
+  renderPrice(); renderLists();
+}
+function renderPrice() {
+  $("price").textContent = R(price);
+  const lb = $("leadby");
+  lb.textContent = !leader ? `Starting bid · steps of ${R(L.i)}` : leader === "you" ? "You're the highest bidder" : `Highest: ${leader}`;
+  lb.className = "leadby" + (leader === "you" ? " you" : "");
+  $("custom").placeholder = `${R(price + L.i)} or more`;
+}
+function renderTimer() {
+  $("secs").textContent = Math.max(0, t);
+  $("ring").style.setProperty("--p", Math.max(0, t) / T * 100);
+  $("ring").classList.toggle("hot", t <= 10);
+}
+function bid(who, amt) {
+  const prev = leader; price = amt; leader = who;
+  if (t < 15) { t = 15; if (who !== "you") feed(`<span>Late bid: clock back to 15 seconds</span>`, "sys"); }
+  const name = who === "you" ? "You" : who;
+  feed(`<span><b>${name}</b> bid</span><b>${R(amt)}</b>`, who === "you" ? "you" : "");
+  if (prev === "you" && who !== "you") toast(`You've been outbid on Lot #${L.id}: now ${R(amt)}`, "warn");
+  if (who === "you") {
+    const m = mine.find(x => x.id === L.id);
+    if (m) m.amt = amt; else mine.unshift({id:L.id, t:L.t, amt, st:"lead"});
+    toast(`Bid placed: ${R(amt)}. You're winning Lot #${L.id}`, "ok");
+  }
+  mine.forEach(m => { if (m.id === L.id) m.st = leader === "you" ? "lead" : "out"; });
+  renderPrice(); renderMine();
+}
+function userBid(amt) {
+  if (closing) return;
+  if (!user) { $("modal").classList.add("open"); return; }
+  if (!amt || amt < price + L.i) { toast(`Minimum bid is ${R(price + L.i)}`, "warn"); return; }
+  bid("you", amt); $("custom").value = "";
+}
+function close() {
+  closing = true; L.status = "sold";
+  const s = $("sold"), st = $("soldtxt");
+  if (leader) {
+    const winner = leader === "you" ? (user ? user + " (you)" : "You") : leader;
+    st.innerHTML = `SOLD<small>${R(price)} to ${leader === "you" ? "you" : leader}</small>`;
+    tx.unshift({lot:`#${L.id} ${L.t}`, who:winner, amt:price, st: leader === "you" ? "due" : (Math.random() < .6 ? "paid" : "due")});
+    feed(`<span>Lot #${L.id} <b>sold</b> to ${leader === "you" ? "you" : leader} for ${R(price)}</span>`, "sys");
+    if (leader === "you") {
+      const m = mine.find(x => x.id === L.id); if (m) m.st = "won";
+      toast(`You won Lot #${L.id}! Pay within 48 hours from My bids.`, "ok");
+    }
+  } else {
+    st.innerHTML = "PASSED<small>no bids</small>";
+    feed(`<span>Lot #${L.id} passed with no bids</span>`, "sys");
+  }
+  s.classList.add("on"); renderMine(); renderLists();
+  setTimeout(() => {
+    idx++;
+    if (idx >= lots.length) { idx = 0; lots.forEach(l => l.status = "queued"); }
+    startLot();
+  }, 3200);
+}
+function tick() {
+  sessionLeft = Math.max(0, sessionLeft - 1);
+  const h = Math.floor(sessionLeft / 3600), m = Math.floor(sessionLeft % 3600 / 60), s = sessionLeft % 60;
+  $("ends").textContent = [h, m, s].map(v => String(v).padStart(2, "0")).join(":");
+  online = Math.max(90, online + Math.round((Math.random() - .45) * 3));
+  $("online").textContent = online; $("k-on").textContent = online;
+  if (closing) return;
+  t--;
+  renderTimer();
+  if (t <= 0) return close();
+  const cap = L.s * 2.6, chance = t > 30 ? .16 : t > 10 ? .26 : .34;
+  if (price < cap && Math.random() < chance) {
+    const steps = Math.random() < .75 ? 1 : 2;
+    bid("Bidder #" + (10 + Math.floor(Math.random() * 55)), price + L.i * steps);
+  }
+}
+function card(l) {
+  return `<div class="mini card" style="padding:12px"><div class="pic" style="background:${l.bg}"><span class="no">Lot #${l.id}</span>${l.e}</div>
+    <h4>${l.t}</h4><div class="muted" style="font-size:.85rem">Starts at ${R(l.s)}</div>
+    <div class="row"><span class="pill ${l.status === "live" ? "livep" : l.status === "sold" ? "soldp" : "q"}">${l.status === "live" ? "Live now" : l.status === "sold" ? "Closed" : "Upcoming"}</span>
+    ${l.status === "queued" ? `<button class="watch ${watch.has(l.id) ? "on" : ""}" data-w="${l.id}">${watch.has(l.id) ? "Watching" : "Watch"}</button>` : ""}</div></div>`;
+}
+function renderLists() {
+  const queued = lots.filter(l => l.status === "queued");
+  $("next").innerHTML = queued.slice(0, 4).map(card).join("") || '<p class="muted">Last lot of the night.</p>';
+  $("all").innerHTML = lots.map(card).join("");
+  $("left").textContent = queued.length + 1;
+  $("lots").innerHTML = lots.map(l => `<tr><td>#${l.id}</td><td>${l.t}</td><td>${R(l.s)}</td><td><span class="pill ${l.status === "live" ? "livep" : l.status === "sold" ? "soldp" : "q"}">${l.status}</span></td></tr>`).join("");
+  $("tx").innerHTML = tx.slice(0, 8).map(x => `<tr><td>${x.lot}</td><td>${x.who}</td><td>${R(x.amt)}</td><td><span class="pill ${x.st}">${x.st === "paid" ? "Paid" : "Awaiting"}</span></td></tr>`).join("");
+  $("k-sold").textContent = tx.length;
+  $("k-rev").textContent = R(tx.reduce((a, x) => a + x.amt, 0));
+  $("k-mem").textContent = members.toLocaleString("en-ZA");
+}
+function renderMine() {
+  const box = $("minebox");
+  if (!user) { box.innerHTML = '<p class="muted">Register or sign in to see your bids and wins.</p><button class="go" id="mreg">Register to bid</button>'; $("mreg").onclick = () => $("modal").classList.add("open"); return; }
+  if (!mine.length) { box.innerHTML = '<p class="muted">No bids yet. Go to Live auction and place your first bid.</p>'; return; }
+  const lab = {lead:"Leading", out:"Outbid", won:"Won: pay now", paid:"Paid"};
+  box.innerHTML = `<table><thead><tr><th>Lot</th><th>Item</th><th>Your bid</th><th>Status</th><th></th></tr></thead><tbody>${mine.map(m =>
+    `<tr><td>#${m.id}</td><td>${m.t}</td><td>${R(m.amt)}</td><td><span class="pill ${m.st === "won" ? "due" : m.st}">${lab[m.st]}</span></td>
+    <td>${m.st === "won" ? `<button class="paybtn" data-pay="${m.id}">Pay ${R(m.amt)}</button>` : ""}</td></tr>`).join("")}</tbody></table>`;
+}
+
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + b.dataset.v));
+  if (b.dataset.v === "mine") renderMine();
+});
+$("quick").onclick = e => { const k = e.target.dataset.k; if (k) userBid(price + L.i * k); };
+$("place").onclick = () => userBid(parseInt($("custom").value.replace(/\D/g, ""), 10));
+$("custom").onkeydown = e => { if (e.key === "Enter") $("place").click(); };
+$("me").onclick = () => { if (!user) $("modal").classList.add("open"); else toast("Profile, saved addresses and bid history live here.") };
+$("cancel").onclick = () => $("modal").classList.remove("open");
+$("reg").onsubmit = e => {
+  e.preventDefault();
+  user = new FormData(e.target).get("n").trim().split(" ")[0] || "Member";
+  members++; $("modal").classList.remove("open");
+  $("me").textContent = "👤 " + user; $("me").classList.add("in");
+  toast(`Welcome, ${user}! We've sent a verification email and SMS.`, "ok");
+  renderMine(); renderLists();
+};
+document.addEventListener("click", e => {
+  const w = e.target.dataset && e.target.dataset.w;
+  if (w) { const id = +w; if (watch.has(id)) watch.delete(id); else { watch.add(id); toast(`We'll notify you by email and SMS when Lot #${id} opens.`); } renderLists(); }
+  const p = e.target.dataset && e.target.dataset.pay;
+  if (p) { const m = mine.find(x => x.id === +p); m.st = "paid"; const t2 = tx.find(x => x.lot.startsWith("#" + p)); if (t2) t2.st = "paid";
+    toast("Real version: opens a secure card / EFT checkout (e.g. Paystack, Yoco or PayFast).", "ok"); renderMine(); renderLists(); }
+});
+$("addform").onsubmit = e => {
+  e.preventDefault(); const f = new FormData(e.target);
+  const emojis = ["📦", "🪑", "🧰", "🖼️", "🎸"];
+  lots.splice(idx + 1, 0, {id:nextId, t:f.get("t"), d:f.get("d") || "New listing", e:emojis[nextId % 5], s:+f.get("s"), i:+f.get("i"), bg:"#f1f5f9", status:"queued"});
+  toast(`Listing added as Lot #${nextId}: it goes up next.`, "ok"); nextId++; e.target.reset(); renderLists();
+};
+
+startLot(); renderTimer(); renderMine();
+setTimeout(() => bid("Bidder #23", L.s + L.i), 600);
+setTimeout(() => bid("Bidder #41", L.s + L.i * 2), 1400);
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
